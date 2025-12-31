@@ -1,0 +1,9 @@
+# Guidelines Folder
+
+This folder contains design system specifications, brand guidelines, and reference data.
+
+## Example files:
+- design-system.json - Design tokens (colors, spacing, typography)
+- brand-guidelines.json - Brand identity rules
+- component-library.json - Component specifications
+- spacing-tokens.json - Layout and spacing rules

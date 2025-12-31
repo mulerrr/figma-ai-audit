@@ -1,0 +1,9 @@
+# Analysis Prompts Folder
+
+This folder contains evaluation frameworks and criteria for analyzing Figma designs.
+
+## Example files:
+- heuristic-evaluation.json - Nielsen's usability heuristics
+- accessibility-checklist.json - WCAG compliance criteria
+- usability-criteria.json - Usability testing guidelines
+- visual-hierarchy.json - Visual design principles

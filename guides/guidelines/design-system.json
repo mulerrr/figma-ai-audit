@@ -1,0 +1,110 @@
+{
+  "name": "Design System Guidelines",
+  "version": "1.0.0",
+  "colors": {
+    "primary": {
+      "main": "#0066FF",
+      "light": "#4D94FF",
+      "dark": "#0052CC",
+      "contrast": "#FFFFFF"
+    },
+    "secondary": {
+      "main": "#00CC88",
+      "light": "#4DDDAA",
+      "dark": "#00A36B",
+      "contrast": "#FFFFFF"
+    },
+    "neutral": {
+      "white": "#FFFFFF",
+      "gray100": "#F5F5F5",
+      "gray200": "#EEEEEE",
+      "gray300": "#E0E0E0",
+      "gray400": "#BDBDBD",
+      "gray500": "#9E9E9E",
+      "gray600": "#757575",
+      "gray700": "#616161",
+      "gray800": "#424242",
+      "gray900": "#212121",
+      "black": "#000000"
+    },
+    "semantic": {
+      "success": "#4CAF50",
+      "warning": "#FF9800",
+      "error": "#F44336",
+      "info": "#2196F3"
+    }
+  },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "xl": 32,
+    "xxl": 48,
+    "xxxl": 64
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": "Inter",
+      "secondary": "Roboto",
+      "monospace": "Roboto Mono"
+    },
+    "fontSize": {
+      "xs": 12,
+      "sm": 14,
+      "base": 16,
+      "lg": 18,
+      "xl": 20,
+      "2xl": 24,
+      "3xl": 30,
+      "4xl": 36,
+      "5xl": 48
+    },
+    "fontWeight": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "lineHeight": {
+      "tight": 1.2,
+      "normal": 1.5,
+      "relaxed": 1.75
+    }
+  },
+  "borderRadius": {
+    "none": 0,
+    "sm": 4,
+    "md": 8,
+    "lg": 12,
+    "xl": 16,
+    "full": 9999
+  },
+  "shadows": {
+    "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+    "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+  },
+  "components": {
+    "button": {
+      "minHeight": 44,
+      "minWidth": 88,
+      "paddingX": 16,
+      "paddingY": 12,
+      "borderRadius": "md"
+    },
+    "input": {
+      "minHeight": 44,
+      "paddingX": 12,
+      "paddingY": 10,
+      "borderRadius": "sm"
+    },
+    "card": {
+      "padding": 16,
+      "borderRadius": "lg",
+      "shadow": "md"
+    }
+  }
+}
