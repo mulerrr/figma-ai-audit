@@ -1,0 +1,439 @@
+[
+  {
+    "name": "Accordion",
+    "component_name": "LgnAccordionGroup",
+    "description": "A vertically stacked list of headers that reveal or hide associated content sections.",
+    "layer_structure": [
+      "Nodes: 10× LgnAccordion (INSTANCE)",
+      "Master Properties (INSTANCE)",
+      "Heading (FRAME)",
+      "Left (FRAME)",
+      "Icon (INSTANCE)",
+      "Swap This Icon (INSTANCE) for swappable/override icon",
+      "Title (TEXT)",
+      "Right (FRAME)",
+      "IconRight (INSTANCE)",
+      "Close (INSTANCE)"
+    ]
+  },
+  {
+    "name": "Alert",
+    "component_name": "LgnAlert",
+    "description": "A banner that displays a short, important message in a way that attracts the user's attention without interrupting their task.",
+    "layer_structure": [
+      "Master Properties (INSTANCE)",
+      "Icon (FRAME)",
+      "info-circle-filled (INSTANCE)",
+      "Body (FRAME)",
+      "Body (FRAME)",
+      "Info title (TEXT)",
+      "x (INSTANCE)"
+    ]
+  },
+  {
+    "name": "Anchor Text",
+    "component_name": "LgnAnchorText",
+    "description": "A clickable text element used for navigation or triggering actions.",
+    "layer_structure": [
+      "Frame (Master Properties)",
+      "Icon (Left - Optional)",
+      "Frame (Padding Left) → Spacer (Instance) → Rectangle (Min-Height Filter)",
+      "Text (Label)",
+      "Frame (Padding Right) → Spacer (Instance) → Rectangle (Min-Height Filter)",
+      "Icon (Right - Optional)"
+    ]
+  },
+  {
+    "name": "Avatar",
+    "component_name": "LgnAvatar",
+    "description": "A visual representation of a user or entity, typically a circular image or initials.",
+    "layer_structure": [
+      "Frame (Master Properties)",
+      "Frame (Content)"
+    ]
+  },
+  {
+    "name": "Badge",
+    "component_name": "LgnBadge",
+    "description": "A small visual indicator for numeric values or status.",
+    "layer_structure": [
+      "Frame (Background Pill — “Master Properties”)",
+      "Rectangle (Min-Width spacer — “Min-Width”)",
+      "Frame (Content Wrapper — “Content”)",
+      "Text (Count/Status — “Value”)"
+    ]
+  },
+  {
+    "name": "Breadcrumb",
+    "component_name": "LgnBreadcrumb",
+    "description": "A list of links indicating the current page's location within a navigational hierarchy.",
+    "layer_structure": [
+      "Item Breadcrumb (INSTANCE)",
+      "Item Separator (INSTANCE)",
+      "Item Breadcrumb (INSTANCE)"
+    ]
+  },
+  {
+    "name": "Button",
+    "component_name": "LgnButton",
+    "description": "High-emphasis button used for primary actions like 'Submit' or 'Save'.",
+    "layer_structure": [
+      "Frame (Container) → LgnButton",
+      "Background Layer → Master Properties",
+      "Text Label → Text",
+      "Icon (Optional, Right/Left) → Icon Left, Icon Right"
+    ]
+  },
+  {
+    "name": "Card",
+    "component_name": "LgnCard",
+    "description": "A container that displays user summary information including avatar and bio.",
+    "layer_structure": [
+      "Master Properties (INSTANCE)",
+      "Frame (Header)",
+      "Icon (Header Icon — Optional)",
+      "Frame (Title & Description)",
+      "Text (Title)",
+      "Text (Description)",
+      "Icon (Open — Optional)",
+      "Icon (Close — Optional)",
+      "Frame (Media)",
+      "Image (Custom Size)",
+      "Frame (Body)",
+      "Text (Sub Title)",
+      "Text (Body Description)",
+      "Frame (Footer)",
+      "Button (Reset)",
+      "Button (Apply)"
+    ]
+  },
+  {
+    "name": "Checkbox",
+    "component_name": "LgnCheckbox",
+    "description": "A form element that allows users to select one or multiple options from a list.",
+    "layer_structure": [
+      "Master Properties (INSTANCE)",
+      "Icon (Checkmark) — “check”",
+      "Icon (Checkmark)",
+      "Text (Label)"
+    ]
+  },
+  {
+    "name": "Chip",
+    "component_name": "LgnChip",
+    "description": "Compact elements that represent an input, attribute, or action.",
+    "layer_structure": [
+      "Master Properties (INSTANCE)",
+      "Rectangle (Min-Width spacer) — “Min-Width”",
+      "Frame (Content)",
+      "Icon (Left — Optional) — “Icon Left”",
+      "Frame (Label)",
+      "Text (Label) — “Value”",
+      "Icon (Remove/Close — Optional) — “Close”"
+    ]
+  },
+  {
+    "name": "Date Picker",
+    "component_name": "LgnDatePicker",
+    "description": "A component allowing users to select a date or date range.",
+    "layer_structure": {
+        "Frame (Label)": [
+            "Text (Label Text)",
+            "Text (Required — Optional)",
+            "Instance (Custom Object — Optional)"
+        ],
+        "Frame (Input Trigger) — “Field”": [
+            "Text (Selected Date) — “Value”",
+            "Icon (Calendar) — “Icon”"
+        ],
+        "Frame (Calendar Popover) — “Date Picker”": [
+
+        ],
+        "Frame (Caption) — “.Caption” (Optional)": [
+
+        ]
+    }
+  },
+  {
+    "name": "Divider",
+    "component_name": "LgnDivider",
+    "description": "A thin line that groups content in lists and layouts.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Line (Stroke)"
+    ]
+  },
+  {
+    "name": "Dropdown",
+    "component_name": "LgnDropdown",
+    "description": "A toggleable menu that displays a list of choices.",
+    "layer_structure": [
+      "Frame (Trigger)",
+      "Text (Selected Option)",
+      "Icon (Chevron)",
+      "Frame (Menu Container)",
+      "List (Options)",
+      "Frame (Option Item)",
+      "Text (Option Label)"
+    ]
+  },
+  {
+    "name": "Image",
+    "component_name": "LgnImage",
+    "description": "A container for displaying static images.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Image (Fill)",
+      "Text (Alt Text Overlay - Optional)"
+    ]
+  },
+  {
+    "name": "Modal",
+    "component_name": "LgnModal",
+    "description": "An overlay dialog used to confirm user actions before proceeding.",
+    "layer_structure": [
+      "Frame (Overlay Background)",
+      "Frame (Dialog Container)",
+      "Text (Title)",
+      "Text (Body Description)",
+      "Frame (Button Group)",
+      "Button (Cancel)",
+      "Button (Confirm)"
+    ]
+  },
+  {
+    "name": "Navbar",
+    "component_name": "LgnNavbar",
+    "description": "Top-level navigation component containing the logo and primary links.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Image (Logo)",
+      "Group (Links)",
+      "Text (Link Item)",
+      "Group (User Actions)",
+      "Icon (Search)",
+      "Icon (Notification)",
+      "Image (Profile Avatar)"
+    ]
+  },
+  {
+    "name": "Pagination",
+    "component_name": "LgnPagination",
+    "description": "Navigation for paged content.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Button (Previous)",
+      "Group (Page Numbers)",
+      "Frame (Active Page)",
+      "Button (Next)"
+    ]
+  },
+  {
+    "name": "Pin Field",
+    "component_name": "LgnPinField",
+    "description": "A specialized input for entering security codes or OTPs.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Group (Input Slots)",
+      "Frame (Single Digit Box)",
+      "Text (Digit)"
+    ]
+  },
+  {
+    "name": "Progress Bar",
+    "component_name": "LgnProgressBar",
+    "description": "A linear track that fills to indicate the completion status of a task.",
+    "layer_structure": [
+      "Frame (Track Container)",
+      "Frame (Fill/Progress)",
+      "Text (Percentage Label - Optional)"
+    ]
+  },
+  {
+    "name": "Progress Circle",
+    "component_name": "LgnProgressCircle",
+    "description": "A circular track that fills to indicate the completion status of a task.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Vector (Track Ring)",
+      "Vector (Progress Arc)",
+      "Text (Value)"
+    ]
+  },
+  {
+    "name": "Radio Button",
+    "component_name": "LgnRadioButton",
+    "description": "Allows selection of a single option from a set.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Frame (Outer Circle)",
+      "Frame (Inner Circle - Selected)",
+      "Text (Label)"
+    ]
+  },
+  {
+    "name": "Rating",
+    "component_name": "LgnRating",
+    "description": "A set of icons allowing users to rate an item.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Group (Stars)",
+      "Icon (Star Filled)",
+      "Icon (Star Empty)"
+    ]
+  },
+  {
+    "name": "Select Field",
+    "component_name": "LgnSelect",
+    "description": "A form element for selecting a value from a dropdown list.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Text (Label)",
+      "Frame (Input Box)",
+      "Text (Current Value)",
+      "Icon (Dropdown Arrow)"
+    ]
+  },
+  {
+    "name": "Sidebar",
+    "component_name": "LgnSidebar",
+    "description": "A vertical navigation drawer.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Frame (Header/Logo)",
+      "List (Menu Items)",
+      "Frame (Item)",
+      "Icon (Item Icon)",
+      "Text (Item Label)",
+      "Frame (Footer)"
+    ]
+  },
+  {
+    "name": "Slider",
+    "component_name": "LgnSlider",
+    "description": "Allows users to select a value from a range by moving a thumb.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Frame (Track)",
+      "Frame (Active Track)",
+      "Frame (Thumb/Handle)",
+      "Text (Value Label - Optional)"
+    ]
+  },
+  {
+    "name": "SnackBar",
+    "component_name": "LgnSnackBar",
+    "description": "A brief message that appears at the bottom of the screen.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Text (Message)",
+      "Button (Action - Optional)",
+      "Icon (Close)"
+    ]
+  },
+  {
+    "name": "Spinner",
+    "component_name": "LgnSpinner",
+    "description": "An animated indicator for an indeterminate wait time.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Vector (Animated Ring/Segment)"
+    ]
+  },
+  {
+    "name": "Stepper",
+    "component_name": "LgnStepper",
+    "description": "Displays progress through a sequence of steps.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Group (Step Items)",
+      "Frame (Step Circle)",
+      "Text (Step Number)",
+      "Line (Connector)",
+      "Text (Step Label)"
+    ]
+  },
+  {
+    "name": "Switch",
+    "component_name": "LgnSwitch",
+    "description": "A toggle for switching between two states (on/off).",
+    "layer_structure": [
+      "Frame (Track)",
+      "Frame (Thumb)",
+      "Text (Label - Optional)"
+    ]
+  },
+  {
+    "name": "Table",
+    "component_name": "LgnTable",
+    "description": "A set of rows and columns for displaying structured data.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Frame (Header Row)",
+      "Text (Column Title)",
+      "List (Body Rows)",
+      "Frame (Row)",
+      "Text (Cell Content)"
+    ]
+  },
+  {
+    "name": "Tabs",
+    "component_name": "LgnTabs",
+    "description": "Navigation for switching between different views within the same context.",
+    "layer_structure": [
+      "Frame (Tab List)",
+      "Frame (Tab Item - Active)",
+      "Text (Label)",
+      "Frame (Indicator Line)",
+      "Frame (Content Panel)"
+    ]
+  },
+  {
+    "name": "Text Area",
+    "component_name": "LgnTextArea",
+    "description": "A form element for multi-line text input.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Text (Label)",
+      "Frame (Input Box)",
+      "Text (Placeholder)",
+      "Icon (Resize Handle)"
+    ]
+  },
+  {
+    "name": "Text Field",
+    "component_name": "LgnTextField",
+    "description": "A form element that allows users to enter single-line text.",
+    "layer_structure": [
+      "Frame (Container)",
+      "Text (Label)",
+      "Frame (Input Box)",
+      "Text (Placeholder)",
+      "Icon (Status - Success/Error)",
+      "Text (Helper Message)"
+    ]
+  },
+  {
+    "name": "Tooltip",
+    "component_name": "LgnTooltip",
+    "description": "A popup that displays information related to an element when hovered or focused.",
+    "layer_structure": [
+      "Frame (Bubble Container)",
+      "Text (Content)",
+      "Vector (Arrow Tip)"
+    ]
+  },
+  {
+    "name": "Tree",
+    "component_name": "LgnTree",
+    "description": "A hierarchical list structure that can be expanded or collapsed.",
+    "layer_structure": [
+      "Frame (Container)",
+      "List (Nodes)",
+      "Frame (Node Item)",
+      "Icon (Expand/Collapse)",
+      "Icon (Folder/File Type)",
+      "Text (Label)"
+    ]
+  }
+]

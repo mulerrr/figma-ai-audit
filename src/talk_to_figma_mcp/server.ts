@@ -3233,6 +3233,247 @@ server.tool(
   }
 );
 
+// Start Legion Assistant Tool
+server.tool(
+  "start_legion_assistant",
+  "Start the Legion Assistant and display the analysis task menu from started_prompt.json",
+  {},
+  async () => {
+    try {
+      const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
+      const filepath = path.join(promptsDir, "started_prompt.json");
+      
+      if (!fs.existsSync(filepath)) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "Error: started_prompt.json not found in guides/analysis-prompts folder."
+            }
+          ]
+        };
+      }
+
+      const content = fs.readFileSync(filepath, 'utf-8');
+      const data = JSON.parse(content);
+
+      // Format the menu with emojis and task descriptions
+      const tasks = data.tasks;
+      const taskList = [
+        { key: 'nng_heuristic_evaluation', emoji: '🔍', number: 1 },
+        { key: 'legion_design_compliance', emoji: '🎯', number: 2 },
+        { key: 'combined_analysis', emoji: '📊', number: 3 },
+        { key: 'component_usage_analysis', emoji: '🧩', number: 4 },
+        { key: 'ux_writing_analysis', emoji: '✍️', number: 5 }
+      ];
+
+      let menuText = `# 👋 Welcome to Legion Assistant!\n\n`;
+      menuText += `${data.template.description}\n\n`;
+      menuText += `## Available Analysis Tasks:\n\n`;
+
+      taskList.forEach(({ key, emoji, number }) => {
+        const task = tasks[key];
+        if (task) {
+          menuText += `**${number}. ${emoji} ${task.name}**\n`;
+          menuText += `   ${task.description}\n\n`;
+        }
+      });
+
+      menuText += `\n---\n\n`;
+      menuText += `To run an analysis:\n`;
+      menuText += `1. Select a frame in Figma\n`;
+      menuText += `2. Tell me which analysis you'd like (by number or name)\n`;
+      menuText += `3. I'll load the appropriate analysis prompt and guide you through it\n\n`;
+      menuText += `**Which analysis would you like to run?**`;
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: menuText
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error loading Legion Assistant: ${error instanceof Error ? error.message : String(error)}`
+          }
+        ]
+      };
+    }
+  }
+);
+
+// Select Legion Analysis Task Tool
+server.tool(
+  "select_legion_task",
+  "Select and load a specific Legion analysis task by number or name",
+  {
+    task: z.string().describe("Task number (1-5) or task name to load")
+  },
+  async ({ task }: any) => {
+    try {
+      const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
+      const startedPromptPath = path.join(promptsDir, "started_prompt.json");
+      
+      if (!fs.existsSync(startedPromptPath)) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "Error: started_prompt.json not found."
+            }
+          ]
+        };
+      }
+
+      const content = fs.readFileSync(startedPromptPath, 'utf-8');
+      const data = JSON.parse(content);
+
+      // Map task numbers and names to their keys
+      const taskMap: { [key: string]: string } = {
+        '1': 'nng_heuristic_evaluation',
+        '2': 'legion_design_compliance',
+        '3': 'combined_analysis',
+        '4': 'component_usage_analysis',
+        '5': 'ux_writing_analysis',
+        'nng': 'nng_heuristic_evaluation',
+        'heuristic': 'nng_heuristic_evaluation',
+        'legion': 'legion_design_compliance',
+        'combined': 'combined_analysis',
+        'component': 'component_usage_analysis',
+        'ux': 'ux_writing_analysis',
+        'writing': 'ux_writing_analysis'
+      };
+
+      // Normalize the task input
+      const normalizedTask = task.toLowerCase().trim();
+      const taskKey = taskMap[normalizedTask] || normalizedTask;
+
+      // Get the task details
+      const selectedTask = data.tasks[taskKey];
+      
+      if (!selectedTask) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Task not found. Please select a valid task number (1-5) or name.\n\nUse \`start_legion_assistant\` to see available tasks.`
+            }
+          ]
+        };
+      }
+
+      // Extract the filename from the prompt instruction
+      const promptMatch = selectedTask.prompt.match(/(\w+)\.json/);
+      if (!promptMatch) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: Could not determine analysis prompt file for task "${selectedTask.name}".`
+            }
+          ]
+        };
+      }
+
+      const promptFilename = promptMatch[1];
+      
+      // Load the analysis prompt using get_analysis_prompt
+      const promptPath = path.join(promptsDir, `${promptFilename}.json`);
+      
+      if (!fs.existsSync(promptPath)) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: Analysis prompt file '${promptFilename}.json' not found.`
+            }
+          ]
+        };
+      }
+
+      const promptContent = fs.readFileSync(promptPath, 'utf-8');
+      const promptData = JSON.parse(promptContent);
+
+      // Format the response with task details and the full prompt
+      let responseText = `# ✅ Selected: ${selectedTask.name}\n\n`;
+      responseText += `${selectedTask.description}\n\n`;
+      responseText += `---\n\n`;
+      responseText += `## Analysis Framework\n\n`;
+      responseText += `${JSON.stringify(promptData, null, 2)}\n\n`;
+      responseText += `---\n\n`;
+      responseText += `**Ready to begin analysis!**\n\n`;
+      responseText += `Please ensure you have:\n`;
+      responseText += `1. Selected a frame in Figma\n`;
+      responseText += `2. Joined the appropriate channel with \`join_channel\`\n\n`;
+      responseText += `I'll now guide you through the ${selectedTask.name} process.`;
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: responseText
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error loading task: ${error instanceof Error ? error.message : String(error)}`
+          }
+        ]
+      };
+    }
+  }
+);
+
+// Legion Greeting Prompt
+server.prompt(
+  "legion_greeting",
+  "Responds to Legion greeting keywords and presents the analysis menu",
+  (extra) => {
+    return {
+      messages: [
+        {
+          role: "assistant",
+          content: {
+            type: "text",
+            text: `# 👋 Hello! I'm Legion Assistant
+
+I'm here to help you analyze your Figma designs using various frameworks and principles.
+
+Let me show you what I can do...
+
+*[Automatically loading the analysis menu...]*
+
+Use the \`start_legion_assistant\` tool to see available analysis tasks, or I can help you with:
+
+- 🔍 **NNG Heuristic Evaluation** - Comprehensive usability analysis
+- 🎯 **Legion Design Principle Analysis** - Design compliance evaluation
+- 📊 **Combined NNG & Legion Analysis** - Full comprehensive evaluation
+- 🧩 **Component Usage Analysis** - Legion DS vs Custom components
+- ✍️ **UX Writing Analysis** - Content quality evaluation
+
+**To get started:**
+1. Select a frame in Figma
+2. Tell me which analysis you'd like to run
+3. I'll guide you through the process
+
+What would you like to analyze today?`
+          }
+        }
+      ],
+      description: "Greeting response for Legion Assistant with automatic menu display"
+    };
+  }
+);
+
 // Start the server
 async function main() {
   try {

@@ -122,6 +122,49 @@ bun socket
 4. Connect the plugin to the WebSocket server by joining a channel using `join_channel`
 5. Use Cursor to communicate with Figma using the MCP tools
 
+## Legion Assistant 🤖
+
+The Legion Assistant is an AI-powered design analysis helper that can be triggered by greeting keywords. Simply say "Hello Legion", "Hi Legion", or just "Legion" to activate it!
+
+### Quick Start with Legion Assistant
+
+1. **Activate Legion Assistant:**
+   - Type: `Hello Legion`, `Hi Legion`, or `Legion`
+   - Or use the tool directly: `start_legion_assistant`
+
+2. **Select an Analysis Task:**
+   - Choose from 5 available analysis frameworks
+   - Use `select_legion_task` with a task number (1-5) or name
+
+3. **Run Your Analysis:**
+   - Select a frame in Figma
+   - Legion will guide you through the analysis process
+
+### Available Analysis Tasks
+
+1. **🔍 NNG Heuristic Evaluation** - Comprehensive usability analysis based on Jakob Nielsen's 10 usability heuristics
+2. **🎯 Legion Design Principle Analysis** - Evaluate design compliance with Legion Design Principles
+3. **📊 Combined NNG & Legion Analysis** - Comprehensive evaluation using both frameworks
+4. **🧩 Component Usage Analysis** - Analyze Legion Design System vs custom component usage
+5. **✍️ UX Writing Analysis** - Evaluate UX writing quality and user persona alignment
+
+### Legion Assistant Tools
+
+- `start_legion_assistant` - Display the analysis task menu
+- `select_legion_task` - Load a specific analysis task by number or name
+- `read_design_guidelines` - Access design system guidelines and specifications
+- `get_analysis_prompt` - Read analysis frameworks and checklists
+
+### Example Usage
+
+```
+User: Hello Legion
+Legion: 👋 Hello! I'm Legion Assistant. Let me show you the available analysis tasks...
+
+User: I want to run task 1
+Legion: ✅ Selected: NNG Heuristic Evaluation. Ready to begin analysis!
+```
+
 ## MCP Tools
 
 The MCP server provides the following tools for interacting with Figma:
@@ -203,6 +246,7 @@ The MCP server provides the following tools for interacting with Figma:
 
 The MCP server includes several helper prompts to guide you through complex design tasks:
 
+- `legion_greeting` - Responds to Legion greeting keywords (Hello Legion, Hi Legion, Legion) and presents the analysis menu
 - `design_strategy` - Best practices for working with Figma designs
 - `read_design_strategy` - Best practices for reading Figma designs
 - `text_replacement_strategy` - Systematic approach for replacing text in Figma designs
