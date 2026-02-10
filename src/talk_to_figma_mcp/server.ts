@@ -1235,6 +1235,41 @@ server.tool(
   }
 );
 
+// Get Master Component Key Tool
+server.tool(
+  "get_master_component_key",
+  "Get the master component key, ID, and name from a component instance. Use this to discover the key of the original component from any library, which can then be used with create_component_instance to create new instances.",
+  {
+    nodeId: z.string().describe("The ID of the instance node to get the master component key from"),
+  },
+  async ({ nodeId }: any) => {
+    try {
+      const result = await sendCommandToFigma("get_master_component_key", {
+        nodeId,
+      });
+      const typedResult = result as any;
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(typedResult, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error getting master component key: ${error instanceof Error ? error.message : String(error)
+              }`,
+          },
+        ],
+      };
+    }
+  }
+);
+
 // Copy Instance Overrides Tool
 server.tool(
   "get_instance_overrides",
@@ -2303,12 +2338,12 @@ server.tool(
     itemSpacing: z.number().optional().describe("Distance between children. Note: This value will be ignored if primaryAxisAlignItems is set to SPACE_BETWEEN."),
     counterAxisSpacing: z.number().optional().describe("Distance between wrapped rows/columns. Only works when layoutWrap is set to WRAP.")
   },
-  async ({ nodeId, itemSpacing, counterAxisSpacing}: any) => {
+  async ({ nodeId, itemSpacing, counterAxisSpacing }: any) => {
     try {
       const params: any = { nodeId };
       if (itemSpacing !== undefined) params.itemSpacing = itemSpacing;
       if (counterAxisSpacing !== undefined) params.counterAxisSpacing = counterAxisSpacing;
-      
+
       const result = await sendCommandToFigma("set_item_spacing", params);
       const typedResult = result as { name: string, itemSpacing?: number, counterAxisSpacing?: number };
 
@@ -3089,7 +3124,7 @@ server.tool(
   async ({ filename }: any) => {
     try {
       const guidelinesDir = path.join(process.cwd(), "guides", "guidelines");
-      
+
       // Check if directory exists
       if (!fs.existsSync(guidelinesDir)) {
         return {
@@ -3107,7 +3142,7 @@ server.tool(
         const files = fs.readdirSync(guidelinesDir)
           .filter(file => file.endsWith('.json'))
           .map(file => file.replace('.json', ''));
-        
+
         return {
           content: [
             {
@@ -3120,7 +3155,7 @@ server.tool(
 
       // Read specific file
       const filepath = path.join(guidelinesDir, `${filename}.json`);
-      
+
       if (!fs.existsSync(filepath)) {
         return {
           content: [
@@ -3166,7 +3201,7 @@ server.tool(
   async ({ filename }: any) => {
     try {
       const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
-      
+
       // Check if directory exists
       if (!fs.existsSync(promptsDir)) {
         return {
@@ -3184,7 +3219,7 @@ server.tool(
         const files = fs.readdirSync(promptsDir)
           .filter(file => file.endsWith('.json'))
           .map(file => file.replace('.json', ''));
-        
+
         return {
           content: [
             {
@@ -3197,7 +3232,7 @@ server.tool(
 
       // Read specific file
       const filepath = path.join(promptsDir, `${filename}.json`);
-      
+
       if (!fs.existsSync(filepath)) {
         return {
           content: [
@@ -3242,7 +3277,7 @@ server.tool(
     try {
       const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
       const filepath = path.join(promptsDir, "started_prompt.json");
-      
+
       if (!fs.existsSync(filepath)) {
         return {
           content: [
@@ -3318,7 +3353,7 @@ server.tool(
     try {
       const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
       const startedPromptPath = path.join(promptsDir, "started_prompt.json");
-      
+
       if (!fs.existsSync(startedPromptPath)) {
         return {
           content: [
@@ -3355,7 +3390,7 @@ server.tool(
 
       // Get the task details
       const selectedTask = data.tasks[taskKey];
-      
+
       if (!selectedTask) {
         return {
           content: [
@@ -3381,10 +3416,10 @@ server.tool(
       }
 
       const promptFilename = promptMatch[1];
-      
+
       // Load the analysis prompt using get_analysis_prompt
       const promptPath = path.join(promptsDir, `${promptFilename}.json`);
-      
+
       if (!fs.existsSync(promptPath)) {
         return {
           content: [
