@@ -163,6 +163,10 @@ async function handleCommand(command, params) {
       return await getAnnotations(params);
     case "set_annotation":
       return await setAnnotation(params);
+    case "get_annotation_categories":
+      return await getAnnotationCategories();
+    case "create_annotation_category":
+      return await createAnnotationCategory(params);
     case "scan_nodes_by_types":
       return await scanNodesByTypes(params);
     case "set_multiple_annotations":
@@ -238,6 +242,8 @@ async function handleCommand(command, params) {
         throw new Error("Missing nodeId parameter");
       }
       return await getMasterComponentKey(params.nodeId);
+    case "analyze_component_usage":
+      return await analyzeComponentUsage(params);
     default:
       throw new Error(`Unknown command: ${command}`);
   }
@@ -683,6 +689,75 @@ async function getMasterComponentKey(nodeId) {
   } catch (error) {
     throw new Error(`Error getting master component key: ${error.message}`);
   }
+}
+
+// Analyze component usage - batch classify instances as library vs local
+async function analyzeComponentUsage(params) {
+  const { depth } = params || {};
+  const selection = figma.currentPage.selection;
+
+  if (selection.length === 0) {
+    throw new Error("No nodes selected. Please select at least one node.");
+  }
+
+  const instances = [];
+
+  // Recursive function to find all INSTANCE nodes
+  async function walkNode(node, currentDepth) {
+    if (depth !== undefined && currentDepth > depth) return;
+
+    if (node.type === "INSTANCE") {
+      try {
+        const mainComponent = await node.getMainComponentAsync();
+        if (mainComponent) {
+          // Get component set name if it belongs to one
+          let componentSetName = null;
+          if (mainComponent.parent && mainComponent.parent.type === "COMPONENT_SET") {
+            componentSetName = mainComponent.parent.name;
+          }
+
+          instances.push({
+            nodeId: node.id,
+            nodeName: node.name,
+            type: mainComponent.remote ? "library" : "local",
+            mainComponentKey: mainComponent.key,
+            mainComponentId: mainComponent.id,
+            mainComponentName: mainComponent.name,
+            componentSetName,
+          });
+        }
+      } catch (e) {
+        instances.push({
+          nodeId: node.id,
+          nodeName: node.name,
+          type: "unknown",
+          error: e.message,
+        });
+      }
+    }
+
+    // Recurse into children
+    if ("children" in node && node.children) {
+      for (const child of node.children) {
+        await walkNode(child, currentDepth + 1);
+      }
+    }
+  }
+
+  // Walk all selected nodes
+  for (const node of selection) {
+    await walkNode(node, 0);
+  }
+
+  const libraryInstances = instances.filter((i) => i.type === "library");
+  const localInstances = instances.filter((i) => i.type === "local");
+
+  return {
+    totalInstances: instances.length,
+    libraryCount: libraryInstances.length,
+    localCount: localInstances.length,
+    instances,
+  };
 }
 
 async function createRectangle(params) {
@@ -2491,6 +2566,56 @@ async function getAnnotations(params) {
   } catch (error) {
     console.error("Error in getAnnotations:", error);
     throw error;
+  }
+}
+
+// Get all annotation categories (default + custom)
+async function getAnnotationCategories() {
+  try {
+    const categories = await figma.annotations.getAnnotationCategoriesAsync();
+    return {
+      success: true,
+      count: categories.length,
+      categories: categories.map((cat) => ({
+        id: cat.id,
+        label: cat.label,
+        color: cat.color,
+        isPreset: cat.isPreset,
+      })),
+    };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// Create a new custom annotation category
+async function createAnnotationCategory(params) {
+  const { label, color } = params || {};
+
+  if (!label) {
+    return { success: false, error: "Missing label parameter" };
+  }
+  if (!color) {
+    return { success: false, error: "Missing color parameter" };
+  }
+
+  try {
+    const category = await figma.annotations.addAnnotationCategoryAsync({
+      label,
+      color,
+    });
+
+    return {
+      success: true,
+      category: {
+        id: category.id,
+        label: category.label,
+        color: category.color,
+        isPreset: category.isPreset,
+      },
+    };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 }
 
