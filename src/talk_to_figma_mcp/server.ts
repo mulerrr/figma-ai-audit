@@ -1029,6 +1029,72 @@ server.tool(
   }
 );
 
+// Get Annotation Categories Tool
+server.tool(
+  "get_annotation_categories",
+  "Get all annotation categories (both default presets and custom) in the current Figma file. Use this to discover existing category IDs before creating annotations.",
+  {},
+  async () => {
+    try {
+      const result = await sendCommandToFigma("get_annotation_categories");
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error getting annotation categories: ${error instanceof Error ? error.message : String(error)
+              }`,
+          },
+        ],
+      };
+    }
+  }
+);
+
+// Create Annotation Category Tool
+server.tool(
+  "create_annotation_category",
+  "Create a new custom annotation category with a label and color. Use this to create audit-specific categories (e.g., 'DS Compliant', 'Non-DS Component', 'Needs Review') before setting annotations. Returns the category ID to use with set_annotation.",
+  {
+    label: z.string().describe("The display name for the category (e.g., 'DS Audit - Compliant')"),
+    color: z.string().describe("The color for the category. Must be one of: BLUE, VIOLET, PURPLE, GREEN, GRAY, ORANGE, RED, YELLOW, TEAL, PINK, LIGHT_BLUE"),
+  },
+  async ({ label, color }: any) => {
+    try {
+      const result = await sendCommandToFigma("create_annotation_category", {
+        label,
+        color,
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error creating annotation category: ${error instanceof Error ? error.message : String(error)
+              }`,
+          },
+        ],
+      };
+    }
+  }
+);
+
 // Set Annotation Tool
 server.tool(
   "set_annotation",
@@ -1227,6 +1293,76 @@ server.tool(
           {
             type: "text",
             text: `Error creating component instance: ${error instanceof Error ? error.message : String(error)
+              }`,
+          },
+        ],
+      };
+    }
+  }
+);
+
+// Get Master Component Key Tool
+server.tool(
+  "get_master_component_key",
+  "Get the master component key, ID, and name from a component instance. Use this to discover the key of the original component from any library, which can then be used with create_component_instance to create new instances.",
+  {
+    nodeId: z.string().describe("The ID of the instance node to get the master component key from"),
+  },
+  async ({ nodeId }: any) => {
+    try {
+      const result = await sendCommandToFigma("get_master_component_key", {
+        nodeId,
+      });
+      const typedResult = result as any;
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(typedResult, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error getting master component key: ${error instanceof Error ? error.message : String(error)
+              }`,
+          },
+        ],
+      };
+    }
+  }
+);
+
+// Analyze Component Usage Tool
+server.tool(
+  "analyze_component_usage",
+  "Batch-analyze all component instances in the current selection. Recursively walks all selected nodes and their children to find every INSTANCE node, then classifies each as 'library' (from an external shared library) or 'local' (defined in the current file). Returns a summary with counts and detailed per-instance info including component keys.",
+  {
+    depth: z.number().optional().describe("Optional maximum recursion depth. Leave empty for unlimited depth."),
+  },
+  async ({ depth }: any) => {
+    try {
+      const result = await sendCommandToFigma("analyze_component_usage", {
+        depth,
+      });
+      const typedResult = result as any;
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(typedResult, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error analyzing component usage: ${error instanceof Error ? error.message : String(error)
               }`,
           },
         ],
@@ -2303,12 +2439,12 @@ server.tool(
     itemSpacing: z.number().optional().describe("Distance between children. Note: This value will be ignored if primaryAxisAlignItems is set to SPACE_BETWEEN."),
     counterAxisSpacing: z.number().optional().describe("Distance between wrapped rows/columns. Only works when layoutWrap is set to WRAP.")
   },
-  async ({ nodeId, itemSpacing, counterAxisSpacing}: any) => {
+  async ({ nodeId, itemSpacing, counterAxisSpacing }: any) => {
     try {
       const params: any = { nodeId };
       if (itemSpacing !== undefined) params.itemSpacing = itemSpacing;
       if (counterAxisSpacing !== undefined) params.counterAxisSpacing = counterAxisSpacing;
-      
+
       const result = await sendCommandToFigma("set_item_spacing", params);
       const typedResult = result as { name: string, itemSpacing?: number, counterAxisSpacing?: number };
 
@@ -2650,7 +2786,11 @@ type FigmaCommand =
   | "set_default_connector"
   | "create_connections"
   | "set_focus"
-  | "set_selections";
+  | "set_selections"
+  | "get_master_component_key"
+  | "analyze_component_usage"
+  | "get_annotation_categories"
+  | "create_annotation_category";
 
 type CommandParams = {
   get_document_info: Record<string, never>;
@@ -3089,7 +3229,7 @@ server.tool(
   async ({ filename }: any) => {
     try {
       const guidelinesDir = path.join(process.cwd(), "guides", "guidelines");
-      
+
       // Check if directory exists
       if (!fs.existsSync(guidelinesDir)) {
         return {
@@ -3107,7 +3247,7 @@ server.tool(
         const files = fs.readdirSync(guidelinesDir)
           .filter(file => file.endsWith('.json'))
           .map(file => file.replace('.json', ''));
-        
+
         return {
           content: [
             {
@@ -3120,7 +3260,7 @@ server.tool(
 
       // Read specific file
       const filepath = path.join(guidelinesDir, `${filename}.json`);
-      
+
       if (!fs.existsSync(filepath)) {
         return {
           content: [
@@ -3166,7 +3306,7 @@ server.tool(
   async ({ filename }: any) => {
     try {
       const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
-      
+
       // Check if directory exists
       if (!fs.existsSync(promptsDir)) {
         return {
@@ -3184,7 +3324,7 @@ server.tool(
         const files = fs.readdirSync(promptsDir)
           .filter(file => file.endsWith('.json'))
           .map(file => file.replace('.json', ''));
-        
+
         return {
           content: [
             {
@@ -3197,7 +3337,7 @@ server.tool(
 
       // Read specific file
       const filepath = path.join(promptsDir, `${filename}.json`);
-      
+
       if (!fs.existsSync(filepath)) {
         return {
           content: [
@@ -3242,7 +3382,7 @@ server.tool(
     try {
       const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
       const filepath = path.join(promptsDir, "started_prompt.json");
-      
+
       if (!fs.existsSync(filepath)) {
         return {
           content: [
@@ -3318,7 +3458,7 @@ server.tool(
     try {
       const promptsDir = path.join(process.cwd(), "guides", "analysis-prompts");
       const startedPromptPath = path.join(promptsDir, "started_prompt.json");
-      
+
       if (!fs.existsSync(startedPromptPath)) {
         return {
           content: [
@@ -3355,7 +3495,7 @@ server.tool(
 
       // Get the task details
       const selectedTask = data.tasks[taskKey];
-      
+
       if (!selectedTask) {
         return {
           content: [
@@ -3381,10 +3521,10 @@ server.tool(
       }
 
       const promptFilename = promptMatch[1];
-      
+
       // Load the analysis prompt using get_analysis_prompt
       const promptPath = path.join(promptsDir, `${promptFilename}.json`);
-      
+
       if (!fs.existsSync(promptPath)) {
         return {
           content: [
