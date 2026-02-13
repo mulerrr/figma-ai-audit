@@ -1065,10 +1065,7 @@ server.tool(
   "Create a new custom annotation category with a label and color. Use this to create audit-specific categories (e.g., 'DS Compliant', 'Non-DS Component', 'Needs Review') before setting annotations. Returns the category ID to use with set_annotation.",
   {
     label: z.string().describe("The display name for the category (e.g., 'DS Audit - Compliant')"),
-    color: z.enum([
-      "BLUE", "VIOLET", "PURPLE", "GREEN", "GRAY",
-      "ORANGE", "RED", "YELLOW", "TEAL", "PINK", "LIGHT_BLUE"
-    ]).describe("The color for the category"),
+    color: z.string().describe("The color for the category. Must be one of: BLUE, VIOLET, PURPLE, GREEN, GRAY, ORANGE, RED, YELLOW, TEAL, PINK, LIGHT_BLUE"),
   },
   async ({ label, color }: any) => {
     try {
